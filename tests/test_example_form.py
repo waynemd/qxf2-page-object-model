@@ -1,6 +1,6 @@
 """
 This is an example automated test to help you learn Qxf2's framework
-Our automated test will do the following:
+Our automated test will do the following
     #Open Qxf2 selenium-tutorial-main page.
     #Fill the example form.
     #Click on Click me! button and check if its working fine.
