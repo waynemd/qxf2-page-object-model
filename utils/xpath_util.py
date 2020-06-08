@@ -42,7 +42,7 @@ class Xpath_Util:
                                     # checking for the unique variable names
                                     if variable_name != '' and variable_name not in self.variable_names:
                                         self.variable_names.append(variable_name)
-                                        print ("%s_%s = %s"%(guessable_element, variable_name, locator.encode('utf-8').decode('latin-1')))
+                                        print ("%s_%s = %s"%(guessable_element, variable_name.encode('utf-8').decode('latin-1'), locator.encode('utf-8').decode('latin-1')))
                                         break
                                     else:
                                         print (locator.encode('utf-8').decode('latin-1') + "----> Couldn't generate appropriate variable name for this xpath")
@@ -102,7 +102,7 @@ class Xpath_Util:
             self.variable_name = element['name'].strip("_")
         # condition to check if the "placeholder" attribute exists and is not having any numerics in it.
         elif element.has_attr('placeholder') and bool(re.search(r'\d', element['placeholder'])) == False:
-            self.variable_name = element['placeholder'].strip("_?*.").encode('utf-8',errors='ignore')
+            self.variable_name = element['placeholder'].strip("_?*.").encode('ascii',errors='ignore')
         # condition to check if the "type" attribute exists and not in text','radio','button','checkbox','search'
         # and printing the variable name
         elif (element.has_attr('type')) and (element['type'] not in ('text','button','radio','checkbox','search')):
@@ -125,7 +125,7 @@ class Xpath_Util:
         "Guess the xpath based on the tag,attr,element[attr]"
         #Class attribute returned as a unicodeded list, so removing 'u from the list and joining back
         if type(element[attr]) is list:
-            element[attr] = [i.encode('utf-8') for i in element[attr]]
+            element[attr] = [i.encode('utf-8').decode('latin-1') for i in element[attr]]
             element[attr] = ' '.join(element[attr])
         self.xpath = "//%s[@%s='%s']"%(tag,attr,element[attr])
 
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     driver.get(url)
 
     #Parsing the HTML page with BeautifulSoup
-    page = driver.execute_script("return document.body.innerHTML").encode('utf-8') #returns the inner HTML as a string
+    page = driver.execute_script("return document.body.innerHTML").encode('utf-8').decode('latin-1') #returns the inner HTML as a string
     soup = BeautifulSoup(page, 'html.parser')
 
     #execute generate_xpath
