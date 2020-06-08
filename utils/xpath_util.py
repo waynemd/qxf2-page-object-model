@@ -42,10 +42,10 @@ class Xpath_Util:
                                     # checking for the unique variable names
                                     if variable_name != '' and variable_name not in self.variable_names:
                                         self.variable_names.append(variable_name)
-                                        print ("%s_%s = %s"%(guessable_element, variable_name.encode('utf-8'), locator.encode('utf-8')))
+                                        print ("%s_%s = %s"%(guessable_element, variable_name, locator.encode('utf-8').decode('latin-1')))
                                         break
                                     else:
-                                        print (locator.encode('utf-8') + "----> Couldn't generate appropriate variable name for this xpath")
+                                        print (locator.encode('utf-8').decode('latin-1') + "----> Couldn't generate appropriate variable name for this xpath")
                                         break
                             elif guessable_element == 'button' and element.getText():
                                 button_text = element.getText()
@@ -55,20 +55,20 @@ class Xpath_Util:
                                     locator = xpath_obj.guess_xpath_using_contains(guessable_element,"text()",button_text.strip())
                                 if len(driver.find_elements_by_xpath(locator))==1:
                                     result_flag = True
-                                    #Check for ascii characters in the button_text
+                                    #Check for utf-8 characters in the button_text
                                     matches = re.search(r"[^\x00-\x7F]",button_text)
                                     if button_text.lower() not in self.button_text_lists:
                                         self.button_text_lists.append(button_text.lower())
                                         if not matches:
                                             # Striping and replacing characters before printing the variable name
-                                            print ("%s_%s = %s"%(guessable_element,button_text.strip().strip("!?.").encode('utf-8').lower().replace(" + ","_").replace(" & ","_").replace(" ","_"), locator.encode('utf-8')))
+                                            print ("%s_%s = %s"%(guessable_element,button_text.strip().strip("!?.").encode('utf-8').decode('latin-1').lower().replace(" + ","_").replace(" & ","_").replace(" ","_"), locator.encode('utf-8').decode('latin-1')))
                                         else:
-                                            # printing the variable name with ascii characters along with language counter
-                                            print ("%s_%s_%s = %s"%(guessable_element,"foreign_language",self.language_counter, locator.encode('utf-8')) + "---> Foreign language found, please change the variable name appropriately")
+                                            # printing the variable name with utf-8 characters along with language counter
+                                            print ("%s_%s_%s = %s"%(guessable_element,"foreign_language",self.language_counter, locator.encode('utf-8').decode('latin-1')) + "---> Foreign language found, please change the variable name appropriately")
                                             self.language_counter +=1
                                     else:
                                         # if the variable name is already taken
-                                        print (locator.encode('utf-8') + "----> Couldn't generate appropriate variable name for this xpath")
+                                        print (locator.encode('utf-8').decode('latin-1') + "----> Couldn't generate appropriate variable name for this xpath")
                                     break
         except Exception as e:
             print ("Exception when trying to generate xpath for:%s"%guessable_element)
@@ -102,7 +102,7 @@ class Xpath_Util:
             self.variable_name = element['name'].strip("_")
         # condition to check if the "placeholder" attribute exists and is not having any numerics in it.
         elif element.has_attr('placeholder') and bool(re.search(r'\d', element['placeholder'])) == False:
-            self.variable_name = element['placeholder'].strip("_?*.").encode('ascii',errors='ignore')
+            self.variable_name = element['placeholder'].strip("_?*.").encode('utf-8',errors='ignore')
         # condition to check if the "type" attribute exists and not in text','radio','button','checkbox','search'
         # and printing the variable name
         elif (element.has_attr('type')) and (element['type'] not in ('text','button','radio','checkbox','search')):
