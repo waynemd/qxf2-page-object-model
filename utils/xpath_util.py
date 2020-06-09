@@ -19,7 +19,7 @@ class Xpath_Util:
     def __init__(self):
         "Initialize the required variables"
         self.elements = None
-        self.guessable_elements = ['input','button','a','span']
+        self.guessable_elements = ['input','button','a','span','div']
         self.known_attribute_list = ['id','name','placeholder','value','title','type','class']
         self.variable_names = []
         self.button_text_lists = []
