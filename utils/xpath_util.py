@@ -19,8 +19,8 @@ class Xpath_Util:
     def __init__(self):
         "Initialize the required variables"
         self.elements = None
-        self.guessable_elements = ['input','button','a','span','div']
-        self.known_attribute_list = ['id','name','placeholder','value','title','type','class']
+        self.guessable_elements = ['input','button','a','span','div','table','tbody']
+        self.known_attribute_list = ['id','name','placeholder','value','title','type','class','td']
         self.variable_names = []
         self.button_text_lists = []
         self.language_counter = 1
@@ -40,7 +40,7 @@ class Xpath_Util:
                                     result_flag = True
                                     variable_name = self.get_variable_names(element)
                                     # checking for the unique variable names
-                                    if variable_name != '' and variable_name not in self.variable_names:
+                                    if  variable_name != '' and variable_name not in self.variable_names:
                                         self.variable_names.append(variable_name)
                                         print ("%s_%s = %s"%(guessable_element, variable_name.encode('utf-8').decode('latin-1'), locator.encode('utf-8').decode('latin-1')))
                                         break
@@ -113,6 +113,10 @@ class Xpath_Util:
         # condition to check if the "role" attribute exists
         elif element.has_attr('role') and element['role']!="button":
             self.variable_name = element['role']
+        elif element.has_attr('class'):
+            self.variable_name = element['class']
+        elif element.has_attr('td'):
+            self.variable_name = element['td']
         else:
             self.variable_name = ''
 
