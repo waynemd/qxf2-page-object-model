@@ -20,7 +20,7 @@ class Xpath_Util:
         "Initialize the required variables"
         self.elements = None
         self.guessable_elements = ['input','button','a','span','div','table','tbody']
-        self.known_attribute_list = ['id','name','placeholder','value','title','type','class','td']
+        self.known_attribute_list = ['id','name','placeholder','value','title','type','class','li']
         self.variable_names = []
         self.button_text_lists = []
         self.language_counter = 1
@@ -47,6 +47,18 @@ class Xpath_Util:
                                     else:
                                         print (locator.encode('utf-8').decode('latin-1') + "----> Couldn't generate appropriate variable name for this xpath")
                                         break
+
+                                elif len(driver.find_elements_by_xpath(locator)) > 1:
+                                    result_flag = True
+                                    variable_name = self.get_variable_names(element)
+                                    # checking for the unique variable names
+                                    if  variable_name != '' and variable_name not in self.variable_names:
+                                        self.variable_names.append(variable_name)
+                                        print ("%s_%s = %s"%(guessable_element, variable_name.encode('utf-8').decode('latin-1'), locator.encode('utf-8').decode('latin-1')))
+                                        break
+                                    else:
+                                        break
+
                             elif guessable_element == 'button' and element.getText():
                                 button_text = element.getText()
                                 if element.getText() == button_text.strip():
@@ -113,13 +125,11 @@ class Xpath_Util:
         # condition to check if the "role" attribute exists
         elif element.has_attr('role') and element['role']!="button":
             self.variable_name = element['role']
-        elif element.has_attr('class'):
-            self.variable_name = element['class']
-        elif element.has_attr('td'):
-            self.variable_name = element['td']
+        # condition to check if the 'class' attribute exits
+        elif element.has_attr('class') and len(element['class'])>=2:
+            self.variable_name = element['class'].strip("_")
         else:
             self.variable_name = ''
-
         return self.variable_name.lower().replace("+/- ","").replace("| ","").replace(" / ","_").  \
         replace("/","_").replace(" - ","_").replace(" ","_").replace("&","").replace("-","_").      \
         replace("[","_").replace("]","").replace(",","").replace("__","_").replace(".com","").strip("_")
